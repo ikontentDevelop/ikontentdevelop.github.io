@@ -57,30 +57,39 @@
 </p>
 
 <p>
-「iKontent SNS Analytics」（以下「本ツール」）は、iKontent が自ら運営する SNS アカウントの数値を集計し、投稿の改善に役立てるための社内用ツールです。一般の方に向けて提供するものではなく、
+「iKontent SNS Analytics」（以下「本ツール」）は、iKontent が自ら運営する SNS アカウントの数値を集計して投稿の改善に役立て、iKontent 自身の動画を YouTube に予約投稿するための社内用ツールです。一般の方に向けて提供するものではなく、
 iKontent 以外のアカウントとの連携は受け付けていません。
 </p>
 
 <h2>1. 取得する情報</h2>
-<p>本ツールは、iKontent が運営する次のアカウントについて、各サービスの公式 API から読み取り専用で情報を取得します。</p>
+<p>本ツールは、iKontent が運営する次のアカウントとファイルについて、各サービスの公式 API から情報を取得します。</p>
 <ul>
   <li><strong>YouTube</strong>（YouTube Data API・YouTube Analytics API・YouTube Reporting API）:
     チャンネルの登録者数、動画のタイトル・公開日時・長さ、再生回数・総再生時間・高評価・コメント数・共有数・登録者の増減、インプレッション数とクリック率などの集計値</li>
   <li><strong>Instagram</strong>（Instagram API）:
     投稿の種類・投稿日時・キャプション、リーチ・閲覧数・いいね・保存・シェアなどの集計値</li>
+  <li><strong>Google ドライブ</strong>（Google Drive API）:
+    iKontent が指定した1つのフォルダにある、投稿予定表（公開日時・タイトル・説明・タグ）と、投稿する動画ファイル</li>
 </ul>
 <p>
-これらはアカウント全体、または投稿・動画ごとの集計値で、視聴者・閲覧者一人ひとりを特定できる情報は含みません。本ツールが Google アカウントに求める権限は読み取り専用（youtube.readonly / yt-analytics.readonly）で、動画の投稿・編集・削除はできません。
+これらはアカウント全体、または投稿・動画ごとの集計値と iKontent 自身の投稿予定で、視聴者・閲覧者一人ひとりを特定できる情報は含みません。
 </p>
+<p>本ツールが使う Google の権限は次のとおりで、それぞれ別の認証情報に分けて管理しています。</p>
+<ul>
+  <li>数値の集計: 読み取り専用（youtube.readonly / yt-analytics.readonly）</li>
+  <li>予約投稿: 動画のアップロードのみ（youtube.upload）。既存の動画の編集・削除はできません</li>
+  <li>Google ドライブ: 共有した1つのフォルダの読み取りのみ</li>
+</ul>
 
 <h2>2. 利用目的</h2>
 <p>
-取得した情報は、iKontent の投稿内容の振り返りと改善（週次レポートの作成と分析）のためだけに使います。広告の配信など、ほかの目的には使いません。
+取得した情報は、iKontent の投稿内容の振り返りと改善（週次レポートの作成と分析）と、iKontent 自身の動画の予約投稿のためだけに使います。広告の配信など、ほかの目的には使いません。
 </p>
 
 <h2>3. 保存と管理</h2>
 <ul>
   <li>取得した集計値と週次レポートは、iKontent が管理する非公開の GitHub リポジトリに保存します。</li>
+  <li>予約投稿のために Google ドライブから読み込んだ動画ファイルは、YouTube へのアップロードの間だけ一時的に保持し、終了後に削除します。投稿の記録（公開日時・タイトル・動画 ID）は上記のリポジトリに保存します。</li>
   <li>API の認証情報（アクセストークン等）は GitHub の暗号化された保管領域（Secrets）に保存し、リポジトリのファイルやログには記録しません。</li>
 </ul>
 
@@ -89,13 +98,18 @@ iKontent 以外のアカウントとの連携は受け付けていません。
 取得した情報を第三者に販売・提供することはありません。ただし、本ツールの運用のために次のサービスを利用しており、その範囲で各社のサービス上で処理されます。
 </p>
 <ul>
-  <li>GitHub（データの保存と、収集・レポート作成の自動実行）</li>
+  <li>GitHub（データの保存と、収集・レポート作成・予約投稿の自動実行）</li>
   <li>Anthropic の Claude（週次レポートの分析の補助）</li>
 </ul>
+<p>
+本ツールは YouTube API サービスを使用しています。本ツールを通じた YouTube の利用には
+<a href="https://www.youtube.com/t/terms">YouTube 利用規約</a>が、Google による情報の取り扱いには
+<a href="https://policies.google.com/privacy">Google プライバシーポリシー</a>が適用されます。
+</p>
 
 <h2>5. 連携の解除とデータの削除</h2>
 <p>
-YouTube との連携は、Google アカウントの「サードパーティ製のアプリとサービス」（<a href="https://myaccount.google.com/permissions">https://myaccount.google.com/permissions</a>）からいつでも解除できます。保存済みのデータの削除をご希望の場合は、下記の連絡先までご連絡ください。
+YouTube・Google ドライブとの連携は、Google アカウントの「サードパーティ製のアプリとサービス」（<a href="https://myaccount.google.com/permissions">https://myaccount.google.com/permissions</a>）からいつでも解除できます。Google ドライブは、フォルダの共有を解除することでも停止できます。連携が解除された場合、保存済みの YouTube のデータは7日以内に削除します。そのほかのデータの削除をご希望の場合は、下記の連絡先までご連絡ください。
 </p>
 
 <h2>6. 本ポリシーの変更</h2>
@@ -129,34 +143,44 @@ The Japanese version above is the authoritative text. This English translation i
 </p>
 <p>
 "iKontent SNS Analytics" ("the Tool") is an internal tool that aggregates statistics from social media accounts
-operated by iKontent itself, in order to improve its posts. It is not offered to the public, and it does not
+operated by iKontent itself in order to improve its posts, and schedules uploads of iKontent's own videos to YouTube. It is not offered to the public, and it does not
 connect to any accounts other than those operated by iKontent.
 </p>
 
 <h2>1. Information We Collect</h2>
-<p>The Tool retrieves information, read-only, through the official APIs of each service for the following accounts operated by iKontent:</p>
+<p>The Tool retrieves information through the official APIs of each service for the following accounts and files operated by iKontent:</p>
 <ul>
   <li><strong>YouTube</strong> (YouTube Data API, YouTube Analytics API, YouTube Reporting API):
     aggregated statistics such as subscriber count, video titles, publish times and durations, views, watch time,
     likes, comments, shares, subscribers gained and lost, impressions, and click-through rate</li>
   <li><strong>Instagram</strong> (Instagram API):
     post type, post time and caption, and aggregated statistics such as reach, views, likes, saves and shares</li>
+  <li><strong>Google Drive</strong> (Google Drive API):
+    the posting schedule (publish time, title, description, tags) and the video files in one folder designated by iKontent</li>
 </ul>
 <p>
-These are aggregated values for the whole account or for each post or video, and they contain no information that
-identifies individual viewers. The Tool requests read-only Google permissions (youtube.readonly /
-yt-analytics.readonly) and cannot upload, edit or delete videos.
+These are aggregated values for the whole account or for each post or video and iKontent's own posting schedule,
+and they contain no information that identifies individual viewers.
 </p>
+<p>The Tool uses the following Google permissions, each managed with separate credentials:</p>
+<ul>
+  <li>Statistics: read-only (youtube.readonly / yt-analytics.readonly)</li>
+  <li>Scheduled uploads: uploading videos only (youtube.upload). It cannot edit or delete existing videos</li>
+  <li>Google Drive: read-only access to the one shared folder</li>
+</ul>
 
 <h2>2. How We Use Information</h2>
 <p>
-The information is used only to review and improve iKontent's own posts (creating and analyzing weekly reports).
+The information is used only to review and improve iKontent's own posts (creating and analyzing weekly reports)
+and to schedule uploads of iKontent's own videos.
 It is not used for advertising or any other purpose.
 </p>
 
 <h2>3. Storage</h2>
 <ul>
   <li>Aggregated statistics and weekly reports are stored in a private GitHub repository managed by iKontent.</li>
+  <li>Video files read from Google Drive for scheduled uploads are kept only temporarily during the upload and are
+    deleted afterwards. A log of uploads (publish time, title, video ID) is stored in the repository above.</li>
   <li>API credentials (such as access tokens) are stored in GitHub's encrypted Secrets and are never written to
     repository files or logs.</li>
 </ul>
@@ -167,15 +191,21 @@ We do not sell or provide the information to third parties. The Tool relies on t
 information is processed on them only to the extent needed to run the Tool:
 </p>
 <ul>
-  <li>GitHub (data storage and automated collection and reporting)</li>
+  <li>GitHub (data storage and automated collection, reporting and scheduled uploads)</li>
   <li>Anthropic's Claude (assistance in analyzing the weekly reports)</li>
 </ul>
+<p>
+The Tool uses YouTube API Services. Use of YouTube through the Tool is subject to the
+<a href="https://www.youtube.com/t/terms">YouTube Terms of Service</a>, and Google's handling of information is
+subject to the <a href="https://policies.google.com/privacy">Google Privacy Policy</a>.
+</p>
 
 <h2>5. Revoking Access and Deleting Data</h2>
 <p>
-Access to YouTube can be revoked at any time from "Third-party apps &amp; services" in your Google Account
+Access to YouTube and Google Drive can be revoked at any time from "Third-party apps &amp; services" in your Google Account
 (<a href="https://myaccount.google.com/permissions">https://myaccount.google.com/permissions</a>).
-To request deletion of stored data, please contact us at the address below.
+Access to Google Drive can also be stopped by unsharing the folder. If access is revoked, we delete the stored
+YouTube data within 7 days. To request deletion of other data, please contact us at the address below.
 </p>
 
 <h2>6. Changes to This Policy</h2>
